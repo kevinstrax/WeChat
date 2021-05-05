@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.jcodec.player.Player;
-import org.jcodec.player.filters.FrameGrabSource;
 import org.jcodec.player.filters.JCodecPacketSource;
 import org.jcodec.player.filters.JSoundAudioOut;
 import org.jcodec.player.filters.MediaInfo.VideoInfo;

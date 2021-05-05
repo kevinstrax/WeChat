@@ -565,10 +565,10 @@ public class ChatItem extends ListItem {
 						fd.setText("另存为");
 						fd.setFilterExtensions(new String[]{"*.png", "*.jpg", "*.gif", "*.bmp"});
 						fd.setFilterNames(new String[]{"png图片", "jpg图片", "gif动图", "bmp图片"});
-						fd.setFileName("IMG_" + System.currentTimeMillis() + Constant.FORMATS[loader.format]);
+						fd.setFileName("IMG_" + System.currentTimeMillis() + Constant.FORMATS[SWT.IMAGE_PNG]);
 						String path = fd.open();
 						if(null != path && !path.isEmpty()) {
-							loader.save(path, loader.format);
+							loader.save(path, SWT.IMAGE_PNG);
 						}
 					}
 				});

@@ -519,8 +519,8 @@ public class ChatComp extends Composite implements HotKeyListener{
 							loader.data = new ImageData[]{image.getImg().getImageData()};
 							loader.save(file.getAbsolutePath(), SWT.IMAGE_JPEG);
 						} else {
-							file = new File("temp","shortcut" + sdf.format(new Date()) + Constant.FORMATS[image.getLoader().format]);
-							image.getLoader().save(file.getAbsolutePath(), image.getLoader().format);
+							file = new File("temp","shortcut" + sdf.format(new Date()) + Constant.FORMATS[SWT.IMAGE_PNG]);
+							image.getLoader().save(file.getAbsolutePath(), SWT.IMAGE_PNG);
 						}
 						
 						ChatLog imgLog = ChatLog.createImageLog(file, convId);
@@ -570,7 +570,8 @@ public class ChatComp extends Composite implements HotKeyListener{
 			convId = null;
 			this.item = null;
 			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
+				@Override
+                public void run() {
 					nameL.setText(null);
 					chatList.clearAll();
 					chatList.scrollToBottom();

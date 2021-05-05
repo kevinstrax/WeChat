@@ -3,6 +3,7 @@ package org.eclipse.wb.swt;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.dnd.ByteArrayTransfer;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.swt.graphics.ImageLoader;
@@ -30,7 +31,7 @@ public class GifTransfer extends ByteArrayTransfer {
 		if (isSupportedType(transferData)) {
 			ImageLoader loader = (ImageLoader) object;
 			try (ByteArrayOutputStream out = new ByteArrayOutputStream();){
-				loader.save(out, loader.format);
+				loader.save(out, SWT.IMAGE_PNG);
 				byte[] buffer = out.toByteArray();
 				super.javaToNative(buffer, transferData);
 			} catch (Exception e) {

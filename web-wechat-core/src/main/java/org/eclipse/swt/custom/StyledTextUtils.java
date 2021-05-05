@@ -52,7 +52,9 @@ public class StyledTextUtils {
 			
 			@Override
 			public void verifyText(VerifyEvent event) {
-				if (event.start == event.end) return;
+				if (event.start == event.end) {
+                    return;
+                }
 				String str = text.getText(event.start, event.end - 1);
 				int index = str.indexOf('\uFFFC');
 				while (index != -1) {
@@ -148,9 +150,9 @@ public class StyledTextUtils {
 				Transfer[] transfers = new Transfer[1];
 				Object[] data = new Object[1];
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss.SSS");
-				File file = new File("temp","shortcut" + sdf.format(new Date()) + Constant.FORMATS[loader.format]);
+				File file = new File("temp","shortcut" + sdf.format(new Date()) + Constant.FORMATS[SWT.IMAGE_PNG]);
 				file.getParentFile().mkdirs();
-				loader.save(file.getAbsolutePath(), loader.format);
+				loader.save(file.getAbsolutePath(), SWT.IMAGE_PNG);
 				file.deleteOnExit();
 				StringBuffer msg = new StringBuffer("<div>");
 				msg.append("<img src=\"file:///").append(file.getAbsolutePath()).append("\" />");
@@ -229,8 +231,8 @@ public class StyledTextUtils {
 							loader.data = new ImageData[]{image.getImg().getImageData()};
 							loader.save(file.getAbsolutePath(), SWT.IMAGE_JPEG);
 						} else {
-							file = new File("temp","shortcut" + sdf.format(new Date()) + Constant.FORMATS[image.getLoader().format]);
-							image.getLoader().save(file.getAbsolutePath(), image.getLoader().format);
+							file = new File("temp","shortcut" + sdf.format(new Date()) + Constant.FORMATS[SWT.IMAGE_PNG]);
+							image.getLoader().save(file.getAbsolutePath(), SWT.IMAGE_PNG);
 						}
 						file.deleteOnExit();
 						

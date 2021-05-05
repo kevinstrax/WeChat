@@ -541,7 +541,7 @@ void onPaint(PaintEvent event) {
 			}
 			gc.setBackground(oldBackground);
 		} else {
-			if ((background != null || (getStyle() & SWT.DOUBLE_BUFFERED) == 0) && background.getAlpha() > 0) {
+			if ((background != null || (getStyle() & SWT.DOUBLE_BUFFERED) == 0)) {
 				gc.setBackground(getBackground());
 				gc.fillRectangle(rect);
 			}

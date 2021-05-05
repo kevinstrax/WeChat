@@ -34,7 +34,6 @@ import org.jcodec.common.model.ColorSpace;
 import org.jcodec.common.model.Picture;
 import org.jcodec.scale.ColorUtil;
 import org.jcodec.scale.RgbToBgr;
-import org.jcodec.scale.SwingUtil;
 
 import com.xk.bean.StringNode;
 
@@ -58,14 +57,20 @@ public class SWTTools {
 	 * @return the shortened text
 	 */
 	public static String shortenText(GC gc, String t, int width) {
-		if (t == null) return null;
+		if (t == null) {
+            return null;
+        }
 		int w = gc.textExtent(ELLIPSIS, StringNode.DRAW_FLAGS).x;
-		if (width<=w) return t;
+		if (width<=w) {
+            return t;
+        }
 		int l = t.length();
 		int max = l/2;
 		int min = 0;
 		int mid = (max+min)/2 - 1;
-		if (mid <= 0) return t;
+		if (mid <= 0) {
+            return t;
+        }
 		TextLayout layout = new TextLayout (null);
 		layout.setText(t);
 		mid = validateOffset(layout, mid);
@@ -91,7 +96,9 @@ public class SWTTools {
 	
 	private static int validateOffset(TextLayout layout, int offset) {
 		int nextOffset = layout.getNextOffset(offset, SWT.MOVEMENT_CLUSTER);
-		if (nextOffset != offset) return layout.getPreviousOffset(nextOffset, SWT.MOVEMENT_CLUSTER);
+		if (nextOffset != offset) {
+            return layout.getPreviousOffset(nextOffset, SWT.MOVEMENT_CLUSTER);
+        }
 		return offset;
 	}
 	
@@ -105,7 +112,8 @@ public class SWTTools {
 		
 		Listener listener = new Listener() {
 		    int startX, startY;
-		    public void handleEvent(Event e) {
+		    @Override
+            public void handleEvent(Event e) {
 		        if (e.type == SWT.MouseDown && e.button == 1) {
 		            startX = e.x;
 		            startY = e.y;
@@ -181,29 +189,6 @@ public class SWTTools {
 				e.printStackTrace();
 			}		
 		}
-	}
-	
-	public static Image toImage(Picture src) {
-		BufferedImage bi = SwingUtil.toBufferedImage(src);
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		try {
-			ImageIO.write(bi, "png", out);
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-		byte[] data = out.toByteArray();
-		ByteArrayInputStream in = new ByteArrayInputStream(data);
-		ImageData id = new ImageData(in);
-		try {
-			out.close();
-			in.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		Image img = new Image(null, id);
-		return img;
 	}
 	
 	

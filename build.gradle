@@ -21,6 +21,7 @@ ext {
     jacksonDatabindVersion = '2.9.9'
     jlVersion = '1.0.0'
     jcodecVersion = '0.2.5'
+    jplayerVersion = '0.2.3.1'
     jnaVersion = '5.2.0'
     jnaPlatformVersion = '5.2.0'
     jsoupVersion = '1.6.2'
@@ -30,16 +31,16 @@ ext {
     tritonusShareVersion = '0.3.6'
     vlcjVersion = '4.2.0'
     vlcjNativesVersion = '4.1.0'
+    opencvVersion = '4.0.0-0'
 
-    mavenJboss = "https://repository.jboss.org/nexus/content/repositories/releases/"
-    mavenBeaTunes = "https://www.beatunes.com/repo/maven2/"
+    mavenJboss = 'https://repository.jboss.org/nexus/content/repositories/releases/'
+    mavenBeaTunes = 'https://www.beatunes.com/repo/maven2/'
+    mavenGithub = 'https://jitpack.io'
+    mavenClojars = 'https://clojars.org/repo/'
 }
 
 repositories {
-    mavenCentral()
-    jcenter()
-    maven { url mavenBeaTunes }
-    maven { url mavenJboss }
+
 }
 
 dependencies {
@@ -61,6 +62,8 @@ subprojects {
         mavenCentral()
         jcenter()
         maven { url mavenJboss }
+        maven { url mavenGithub }
+        maven { url mavenClojars }
     }
 
 }
@@ -80,15 +83,16 @@ project(":web-wechat-core") {
         implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
         implementation "org.clojars.automata:jl:$jlVersion"
         implementation "org.jcodec:jcodec:$jcodecVersion"
+        implementation "com.github.kevinstrax:jplayer:$jplayerVersion"
         implementation "net.java.dev.jna:jna:$jnaVersion"
         implementation "net.java.dev.jna:jna-platform:$jnaPlatformVersion"
         implementation "org.jsoup:jsoup:$jsoupVersion"
         implementation "javazoom:mp3spi:$mp3spiVersion"
         implementation "com.belerweb:pinyin4j:$pinyin4jVersion"
-        implementation "org.eclipse.swt:org.eclipse.swt.win32.win32.x86:$swtVersion"
+        implementation "org.eclipse.swt:org.eclipse.swt.win32.win32.x86_64:$swtVersion"
         implementation "org.mobicents.external.tritonus:tritonus_share:$tritonusShareVersion"
         implementation "uk.co.caprica:vlcj:$vlcjVersion"
         implementation "uk.co.caprica:vlcj-natives:$vlcjNativesVersion"
-
+        implementation "opencv:opencv:$opencvVersion"
     }
 }
