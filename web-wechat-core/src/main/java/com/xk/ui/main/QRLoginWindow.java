@@ -2,9 +2,16 @@ package com.xk.ui.main;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 
+import com.xk.WebWechatClient;
+import com.xk.core.IMEvent;
+import com.xk.core.IMEventListener;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.client.ClientProtocolException;
 import org.dom4j.Document;
 import org.dom4j.Element;
@@ -37,16 +44,23 @@ import com.xk.utils.XMLUtils;
  */
 public class QRLoginWindow {
 
+    private static final Log LOG = LogFactory.getLog(QRLoginWindow.class);
+
 	protected Shell shell;
 	private Label qrImage;
 	private Label tips;
 	private Timer timer;
+	private static WebWechatClient client = null;
 
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
 	public static void main(String[] args) {
+
+	    client = new WebWechatClient();
+	    client.init();
+
 		try {
 			QRLoginWindow window = new QRLoginWindow();
 			window.open();
@@ -147,6 +161,7 @@ public class QRLoginWindow {
 		tips.setBounds(0, 308, 280, 17);
 		tips.setText("请使用微信扫一扫以登录");
 		loadQRImage();
+		loopGetState();
 		SWTTools.topWindow(shell);
 	}
 	
@@ -155,104 +170,50 @@ public class QRLoginWindow {
 	 * @date 2016年12月13日
 	 */
 	private void loadQRImage() {
-		String url = Constant.GET_CONV_ID.replace("{TIME}", System.currentTimeMillis() + "");
-		HTTPUtil hu = HTTPUtil.getInstance();
-		try {
-			String result = hu.readJsonfromURL2(url, null);
-			String sign = "window.QRLogin.code = 200; window.QRLogin.uuid = ";
-			if(null != result && result.contains(sign)){
-				String uuid = result.replace(sign, "").replace("\"", "").replace(";", "");
-				String qrUrl = Constant.GET_QR_IMG.replace("{UUID}", uuid);
-				InputStream in = hu.getInput(qrUrl);
-				Image img = new Image(null, in);
-				in.close();
-				Image dest = SWTTools.scaleImage(img.getImageData(), 186, 186);
-				qrImage.setImage(dest);
-				img.dispose();
-				loopGetState(uuid);
-			}
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        Image img = null;
+        try {
+            InputStream in = client.getQrCode(null).get();
+            if (Objects.isNull(in)) {
+                client.destroy();
+                LOG.error("[Error] fail to getQrCode, client exit.");
+                return;
+            }
+            img = new Image(null, in);
+        } catch (InterruptedException | ExecutionException e) {
+            LOG.error("[Error] fail to getQrCode, ", e);
+            client.destroy();
+            return;
+        }
+        Image dest = SWTTools.scaleImage(img.getImageData(), 186, 186);
+        qrImage.setImage(dest);
+        img.dispose();
 	}
 	
 	/**
 	 * 用途：获取当前状态
 	 * @date 2016年12月13日
 	 */
-	private void loopGetState(String uuid) {
-		final String url = Constant.GET_STATUE.replace("{TIME}", System.currentTimeMillis() + "").replace("{UUID}", uuid);
-		timer = new Timer();
-		timer.schedule(new TimerTask() {
-			
-			@Override
-			public void run() {
-				HTTPUtil hu = HTTPUtil.getInstance();
-				try {
-					String result = hu.readJsonfromURL2(url, null);
-					System.out.println("获取状态:" + result);
-					if(null != result){
-						if(result.contains("window.code=408;")) {
-							
-						}else if(result.contains("window.code=201;")) {
-							Display.getDefault().asyncExec(new Runnable() {
-								public void run() {
-									tips.setText("请在手机上确认登录！");
-								}
-							});
-						}else if(result.contains("window.code=200;window.redirect_uri=")){
-							timer.cancel();
-							timer = null ;
-							result = result.replace("window.code=200;window.redirect_uri=", "").replace("\"", "");
-							Display.getDefault().asyncExec(new Runnable() {
-								public void run() {
-									tips.setText("正在登录...");
-								}
-							});
-							for(String host : Constant.HOSTS) {
-								if(result.contains(host)) {
-									Constant.HOST = host;
-									break;
-								}
-							}
-							String winAndsid = hu.readJsonfromURL2(result, null);
-							System.out.println("获取wxsid和wxuin:" + winAndsid);
-							if(null != winAndsid) {
-								Document doc = XMLUtils.fromText(winAndsid);
-								if(null != doc) {
-									Element root = doc.getRootElement();
-									final WeChatSign sign = new WeChatSign();
-									sign.pass_ticket = root.elementTextTrim("pass_ticket");
-									sign.skey = root.elementTextTrim("skey");
-									sign.wxsid = root.elementTextTrim("wxsid");
-									sign.wxuin = root.elementTextTrim("wxuin");
-									Constant.sign = sign;
-									Display.getDefault().asyncExec(new Runnable() {
-										public void run() {
-											shell.setVisible(false);
-											MainWindow main = MainWindow.getInstance();
-											main.open();
-										}
-									});
-								}
-							}
-							
-							
-						}
-					}
-					
-				} catch (ClientProtocolException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}, 1000, 1000);
+	private void loopGetState() {
+	    client.checkQrCode(event -> {
+           switch (event.getType()) {
+               case EVT_OK:
+               case EVT_WAITING_SCAN:
+                   break;
+               case EVT_WAITING_CONFIRM:
+                   Display.getDefault().asyncExec(() -> tips.setText("请在手机上确认登录！"));
+                   break;
+               case EVT_WAITING_LOGIN:
+                   Display.getDefault().asyncExec(() -> tips.setText("正在登录..."));
+                   break;
+               case EVT_LOGIN_SUCCESS:
+                   Display.getDefault().asyncExec(() -> {
+                       shell.setVisible(false);
+                       MainWindow main = MainWindow.getInstance();
+                       main.open();
+                   });
+                   break;
+               default:
+           }
+        });
 	}
 }
