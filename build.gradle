@@ -1,0 +1,94 @@
+group 'com.xk'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'idea'
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+ext {
+    commonsLang3Version = '3.8.1'
+    commonsLoggingVersion = '1.1.3'
+    dom4jVersion = '1.6.1'
+    fluentHcVersion = '4.3.3'
+    httpclientVersion = '4.3.3'
+    httpclientCacheVersion = '4.3.3'
+    httpcoreVersion = '4.3.2'
+    httpmimeVersion = '4.3.3'
+    jacksonAnnotationsVersion = '2.9.9'
+    jacksonCoreVersion = '2.9.9'
+    jacksonDatabindVersion = '2.9.9'
+    jlVersion = '1.0.0'
+    jcodecVersion = '0.2.5'
+    jnaVersion = '5.2.0'
+    jnaPlatformVersion = '5.2.0'
+    jsoupVersion = '1.6.2'
+    mp3spiVersion = '1.9.4'
+    pinyin4jVersion = '2.5.0'
+    swtVersion = '4.3'
+    tritonusShareVersion = '0.3.6'
+    vlcjVersion = '4.2.0'
+    vlcjNativesVersion = '4.1.0'
+
+    mavenJboss = "https://repository.jboss.org/nexus/content/repositories/releases/"
+    mavenBeaTunes = "https://www.beatunes.com/repo/maven2/"
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url mavenBeaTunes }
+    maven { url mavenJboss }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+subprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+
+    version = parent.version
+    group = parent.group
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    repositories {
+        maven { url mavenBeaTunes }
+        mavenCentral()
+        jcenter()
+        maven { url mavenJboss }
+    }
+
+}
+
+project(":web-wechat-core") {
+    dependencies {
+        implementation "org.apache.commons:commons-lang3:$commonsLang3Version"
+        implementation "commons-logging:commons-logging:$commonsLoggingVersion"
+        implementation "dom4j:dom4j:$dom4jVersion"
+        implementation "org.apache.httpcomponents:fluent-hc:$fluentHcVersion"
+        implementation "org.apache.httpcomponents:httpclient-cache:$httpclientCacheVersion"
+        implementation "org.apache.httpcomponents:httpclient:$httpclientVersion"
+        implementation "org.apache.httpcomponents:httpcore:$httpcoreVersion"
+        implementation "org.apache.httpcomponents:httpmime:$httpmimeVersion"
+        implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotationsVersion"
+        implementation "com.fasterxml.jackson.core:jackson-core:$jacksonCoreVersion"
+        implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
+        implementation "org.clojars.automata:jl:$jlVersion"
+        implementation "org.jcodec:jcodec:$jcodecVersion"
+        implementation "net.java.dev.jna:jna:$jnaVersion"
+        implementation "net.java.dev.jna:jna-platform:$jnaPlatformVersion"
+        implementation "org.jsoup:jsoup:$jsoupVersion"
+        implementation "javazoom:mp3spi:$mp3spiVersion"
+        implementation "com.belerweb:pinyin4j:$pinyin4jVersion"
+        implementation "org.eclipse.swt:org.eclipse.swt.win32.win32.x86:$swtVersion"
+        implementation "org.mobicents.external.tritonus:tritonus_share:$tritonusShareVersion"
+        implementation "uk.co.caprica:vlcj:$vlcjVersion"
+        implementation "uk.co.caprica:vlcj-natives:$vlcjNativesVersion"
+
+    }
+}
