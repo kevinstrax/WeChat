@@ -162,9 +162,9 @@ public class ImojCache {
 		}finally {
 			try {
 				in.close();
-			} catch (IOException e) {
+			} catch (Exception ignore) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+
 			}
 		}
 		
