@@ -168,3 +168,10 @@ local.properties
 # Typically, this file would be tracked if it contains build/dependency configurations:
 #.project
 
+.gradle/6.1.1/vcsMetadata-1/
+chatlogs/
+headscache/
+msgimages/
+web-wechat-core/build/generated/
+web-wechat-core/build/resources/
+web-wechat-core/src/test/
