@@ -35,6 +35,8 @@ gen
 .idea/**/libraries
 /gradle/*
 .gradle/*
+gradlew
+gradlew.bat
 
 # Gradle and Maven with auto-import
 # When using Gradle or Maven with auto-import, you should exclude module files,
@@ -169,10 +171,6 @@ local.properties
 # Typically, this file would be tracked if it contains build/dependency configurations:
 #.project
 
-.gradle/6.1.1/vcsMetadata-1/
-chatlogs/
 headscache/
 msgimages/
-web-wechat-core/build/generated/
-web-wechat-core/build/resources/
-web-wechat-core/src/test/
+web-wechat-core/build/*
