@@ -40,7 +40,7 @@ ext {
 }
 
 repositories {
-
+    mavenCentral()
 }
 
 dependencies {
@@ -58,9 +58,9 @@ subprojects {
     targetCompatibility = 1.8
 
     repositories {
-        maven { url mavenBeaTunes }
         mavenCentral()
         jcenter()
+        maven { url mavenBeaTunes }
         maven { url mavenJboss }
         maven { url mavenGithub }
         maven { url mavenClojars }
@@ -68,25 +68,18 @@ subprojects {
 
 }
 
-project(":web-wechat-core") {
+project(":web-wechat-swt") {
     dependencies {
-        implementation "org.apache.commons:commons-lang3:$commonsLang3Version"
-        implementation "commons-logging:commons-logging:$commonsLoggingVersion"
-        implementation "dom4j:dom4j:$dom4jVersion"
-        implementation "org.apache.httpcomponents:fluent-hc:$fluentHcVersion"
-        implementation "org.apache.httpcomponents:httpclient-cache:$httpclientCacheVersion"
-        implementation "org.apache.httpcomponents:httpclient:$httpclientVersion"
-        implementation "org.apache.httpcomponents:httpcore:$httpcoreVersion"
-        implementation "org.apache.httpcomponents:httpmime:$httpmimeVersion"
-        implementation "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotationsVersion"
-        implementation "com.fasterxml.jackson.core:jackson-core:$jacksonCoreVersion"
-        implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
+
+        compile project(":web-wechat-core")
+
+        compile project(":web-wechat-common")
+
         implementation "org.clojars.automata:jl:$jlVersion"
         implementation "org.jcodec:jcodec:$jcodecVersion"
         implementation "com.github.kevinstrax:jplayer:$jplayerVersion"
         implementation "net.java.dev.jna:jna:$jnaVersion"
         implementation "net.java.dev.jna:jna-platform:$jnaPlatformVersion"
-        implementation "org.jsoup:jsoup:$jsoupVersion"
         implementation "javazoom:mp3spi:$mp3spiVersion"
         implementation "com.belerweb:pinyin4j:$pinyin4jVersion"
         implementation "org.eclipse.swt:org.eclipse.swt.win32.win32.x86_64:$swtVersion"
@@ -94,5 +87,50 @@ project(":web-wechat-core") {
         implementation "uk.co.caprica:vlcj:$vlcjVersion"
         implementation "uk.co.caprica:vlcj-natives:$vlcjNativesVersion"
         implementation "opencv:opencv:$opencvVersion"
+    }
+}
+
+project(":web-wechat-javafx") {
+    dependencies {
+        compile project(":web-wechat-core")
+
+    }
+}
+
+project(":web-wechat-core") {
+    dependencies {
+        compile project(":web-wechat-common")
+    }
+}
+
+project(":web-wechat-common") {
+    dependencies {
+
+        // utils
+        compile "org.apache.commons:commons-lang3:$commonsLang3Version"
+
+        // logging
+        compile "commons-logging:commons-logging:$commonsLoggingVersion"
+
+        // httpclient
+        compile "org.apache.httpcomponents:fluent-hc:$fluentHcVersion"
+        compile "org.apache.httpcomponents:httpclient-cache:$httpclientCacheVersion"
+        compile "org.apache.httpcomponents:httpclient:$httpclientVersion"
+        compile "org.apache.httpcomponents:httpcore:$httpcoreVersion"
+        compile "org.apache.httpcomponents:httpmime:$httpmimeVersion"
+
+        // json
+        compile "com.fasterxml.jackson.core:jackson-annotations:$jacksonAnnotationsVersion"
+        compile "com.fasterxml.jackson.core:jackson-core:$jacksonCoreVersion"
+        compile "com.fasterxml.jackson.core:jackson-databind:$jacksonDatabindVersion"
+
+        // xml
+        compile "dom4j:dom4j:$dom4jVersion"
+
+        // html
+        compile "org.jsoup:jsoup:$jsoupVersion"
+
+        // test
+        testCompile group: 'junit', name: 'junit', version: '4.12'
     }
 }

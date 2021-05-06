@@ -173,4 +173,4 @@ local.properties
 
 headscache/
 msgimages/
-web-wechat-core/build/*
+**/build/**
